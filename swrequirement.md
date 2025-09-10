@@ -2,7 +2,10 @@ Project Name
 
 Business Context
 
-Problem Statment
+## Problem Statment
+On most social media platforms today, people feel pressure to maintain a curated image, gain followers, and measure their self-worth against likes, comments, and numbers. This seriousness often creates stress, anxiety, and comparison instead of joy. Users are used to platforms that amplify competition and status rather than focusing on fun, lighthearted interaction. Social media spaces are often structured around performance and validation, leaving little room for spontaneity or carefree connection.
+There are two problems this platform is focusing on: 1) reducing the pressure of social comparison and 2) creating a space for lighthearted interaction without the burden of image or status.
+The solution will seek to address these problems by reimagining social media as a place where connection is rooted in fun, spontaneity, and carefree engagement rather than validation or competition.
 
 Scope
 
