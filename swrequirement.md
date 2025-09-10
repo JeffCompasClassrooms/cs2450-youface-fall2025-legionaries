@@ -6,9 +6,16 @@ Problem Statment
 
 Scope
 
+This app will be available to users on their computers and mobile devices.
+
+In Scope: Focus for the scope of the project will be usability of the app on both computer and mobile browsing
+
+Out of Scope: We will not be trying to create an app for apple of google store during this release of the project.
+
 Assumptions
 
 Features
+
 Log In: The user will be able to log in to the application with a unique username and personal password. Captcha
 will be a troll type log in like having to play wordle to log in.
 
