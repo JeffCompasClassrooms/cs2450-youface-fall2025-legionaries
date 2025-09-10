@@ -45,4 +45,7 @@ Games: Users will be able to compete in games to compete for followers on the ac
 
 Graffiti: People will be able to go to other profile pages and make drawing on their pages. 
 
-Non-Functional Requirements
+## Non-Functional Requirements:
+- App should run in Linux, Mac, and Windows
+- App can be distributed as an executable
+- Only use copyright free assets/homemade ones
