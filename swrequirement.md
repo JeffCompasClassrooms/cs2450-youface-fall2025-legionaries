@@ -1,7 +1,9 @@
 Project Name
 
 Business Context
-
+Humans are always in search of entertainment and a quick hit of dopamine. Humans are also
+quick to become combative in a social media setting. People need to learn not to take
+social media so serously.
 Problem Statment
 
 Scope
