@@ -23,6 +23,7 @@ In Scope: Focus for the scope of the project will be usability of the app on bot
 Out of Scope: We will not be trying to create an app for apple of google store during this release of the project.
 
 ## Assumptions
+It is assumed that users will have familiarity with other common social media platforms and the average user will have basic tech-savviness.
 
 ## Features
 
@@ -31,7 +32,7 @@ will be a troll type log in like having to play wordle to log in.
 
 Password: Have password requirements to increase security
 
-Home Page: 
+Home Page: The primary page which the user will see post relevant to them and can create posts.
 
 Profile Page: A page unique to each user that is customizable. 
 
