@@ -10,8 +10,8 @@ if not client.api_key:
 
 def generate_post(prompt: str) -> str:
     prompt = prompt.strip()
-    if len(prompt) > 200:
-        return "Prompt is too long. Please limit to 200 characters."
+    if len(prompt) > 100:
+        return "Prompt is too long. Please limit to 100 characters."
     if not prompt:
         prompt = "Write a short, odd social media post to confuse me and make me laugh."
 
@@ -19,7 +19,7 @@ def generate_post(prompt: str) -> str:
         response = client.responses.create(
             model="gpt-4o-mini",
             input=prompt,
-            max_output_tokens=120,
+            max_output_tokens=300,
         )
         return response.output[0].content[0].text.strip()
     except Exception:
