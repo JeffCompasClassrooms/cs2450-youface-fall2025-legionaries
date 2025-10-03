@@ -1,6 +1,7 @@
 import flask
 
 from db import posts, users, helpers
+from services.ai import generate_post
 
 blueprint = flask.Blueprint("posts", __name__)
 
@@ -17,7 +18,15 @@ def post():
         flask.flash('You need to be logged in to do that.', 'danger')
         return flask.redirect(flask.url_for('login.loginscreen'))
 
-    post = flask.request.form.get('post')
-    posts.add_post(db, user, post)
+    post_text = (flask.request.form.get('post') or '').strip()
+    action = flask.request.form.get('action', 'manual')
+
+    if action == 'ai':
+        post_text = generate_post(post_text)
+    elif not post_text:
+        flask.flash('Please enter something to post.', 'warning')
+        return flask.redirect(flask.url_for('login.index'))
+
+    posts.add_post(db, user, post_text)
 
     return flask.redirect(flask.url_for('login.index'))
