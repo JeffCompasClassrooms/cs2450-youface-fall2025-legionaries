@@ -1,9 +1,9 @@
 import time
 import tinydb
 
-def add_post(db, user, text):
+def add_post(db, user, text, nsfw_flag=False):
     posts = db.table('posts')
-    posts.insert({'user': user['username'], 'text': text, 'time': time.time()})
+    posts.insert({'user': user['username'], 'text': text, 'time': time.time(), 'nsfw' : nsfw_flag})
 
 def get_posts(db, user):
     posts = db.table('posts')
