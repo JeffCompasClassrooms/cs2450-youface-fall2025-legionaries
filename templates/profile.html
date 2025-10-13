@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile – {{ profile_id }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/graffiti.css') }}">
+</head>
+<body>
+  <h1>Profile: {{ profile_id }}</h1>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <label><input type="checkbox" id="toggle"> Draw</label>
+    <input type="color" id="color" value="#ff0055">
+    <input type="range" id="size" min="1" max="24" value="4">
+    <button id="pen">Pen</button>
+    <button id="eraser">Eraser</button>
+    <button id="push">Push to Profile</button>
+    <button id="clear" class="danger">Clear (owner)</button>
+  </div>
+
+  <!-- Drawing Canvas -->
+  <div class="canvas-wrap">
+    <canvas id="c"></canvas>
+  </div>
+
+  <script>
+    window.G = { profileId: { profile_id, tojson } };
+  </script>
+  <script src="{{ url_for('static', filename='js/graffiti.js') }}"></script>
+</body>
+</html>
