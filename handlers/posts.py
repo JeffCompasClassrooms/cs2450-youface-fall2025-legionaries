@@ -26,7 +26,12 @@ def post():
     elif not post_text:
         flask.flash('Please enter something to post.', 'warning')
         return flask.redirect(flask.url_for('login.index'))
+    
+    if 'nsfw_toggle' in flask.request.form:
+        nsfw_flag = True
+    else:
+        nsfw_flag = False
 
-    posts.add_post(db, user, post_text)
+    posts.add_post(db, user, post_text, nsfw_flag)
 
     return flask.redirect(flask.url_for('login.index'))

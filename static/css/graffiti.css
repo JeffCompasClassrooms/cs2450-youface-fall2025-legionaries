@@ -1,0 +1,42 @@
+body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    margin: 16px;
+  }
+  
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .toolbar .danger {
+    border-color: #e33;
+    color: #e33;
+  }
+  
+  button {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+  }
+  
+  .canvas-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    height: 420px;
+    border: 1px dashed #ccc;
+    border-radius: 10px;
+  }
+  
+  #c {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  
