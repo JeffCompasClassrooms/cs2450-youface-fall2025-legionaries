@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-8 mx-auto">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h3 class="card-title">Edit Profile</h3>
+
+        <!-- One unified form -->
+        <form method="post" enctype="multipart/form-data">
+          <!-- Bio -->
+          <div class="mb-3">
+            <label for="bio" class="form-label">Bio</label>
+            <textarea id="bio" name="bio" class="form-control" rows="4">{{ user['bio'] }}</textarea>
+          </div>
+
+          <!-- Profile Picture -->
+          <h5 class="mt-4">Profile Picture</h5>
+          <img src="{{ user['profile_picture'] }}" alt="Profile Picture" class="img-thumbnail mb-2" style="max-width: 150px;">
+          <div class="mb-3">
+            <input type="file" name="picture" accept="image/*" class="form-control">
+          </div>
+
+          <!-- Banner Art -->
+          <h5 class="mt-4">Banner Art</h5>
+          <img src="{{ user['banner_picture'] }}" alt="Banner Picture" class="img-fluid mb-2" style="max-height: 150px;">
+          <small class="text-muted d-block mb-2">Optimal size: 912x250 pixels</small>
+          <div class="mb-3">
+            <input type="file" name="banner" accept="image/*" class="form-control">
+          </div>
+
+          <!-- Profile Audio -->
+          <h5 class="mt-4">Profile Audio</h5>
+          <audio controls class="mb-2" style="width: 100%;">
+            <source src="{{ user['profile_audio'] }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+          <small class="text-muted d-block mb-2">Upload an MP3 file (max size ~5MB)</small>
+          <div class="mb-3">
+            <input type="file" name="audio" accept="audio/mpeg" class="form-control">
+          </div>
+
+          <!-- Buttons -->
+          <button type="submit" class="btn btn-primary">Save</button>
+          <a href="{{ url_for('profile.profile', username=user['username']) }}" class="btn btn-secondary">Cancel</a>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,33 +1,72 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Profile – {{ profile_id }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/graffiti.css') }}">
-</head>
-<body>
-  <h1>Profile: {{ profile_id }}</h1>
+{% extends "base.html" %}
 
-  <!-- Toolbar -->
-  <div class="toolbar">
-    <label><input type="checkbox" id="toggle"> Draw</label>
-    <input type="color" id="color" value="#ff0055">
-    <input type="range" id="size" min="1" max="24" value="4">
-    <button id="pen">Pen</button>
-    <button id="eraser">Eraser</button>
-    <button id="push">Push to Profile</button>
-    <button id="clear" class="danger">Clear (owner)</button>
+{% block content %}
+<div class="row">
+  <div class="col-sm-8 mx-auto">
+    <div class="card mb-3">
+  <div class="card-body position-relative p-0">
+    <!-- Banner Image -->
+    <div style="height: 200px; overflow: hidden;">
+      <img src="{{ profile_user['banner_picture'] }}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+    
+    <!-- Profile Picture (overlapping banner) -->
+    <div style="position: relative; margin-top: -60px; padding: 0 20px;">
+      <div style="width: 200px; height: 200px; border-radius: 50%; background-color: white; display: inline-block;">
+        <img 
+          src="{{ profile_user['profile_picture'] }}" 
+          alt="Embedded Profile Picture"
+          style="width: 200px; height: 200px; border-radius: 50%; border: 3px solid white; object-fit: cover;">
+      </div>
+      
+      <!-- Profile Info -->
+      <div style="padding: 20px 0;">
+        <h3 class="card-title">{{ profile_user['username'] }}</h3>
+        <p>{{ profile_user['bio'] }}</p>
+        {% if user['username'] == profile_user['username'] %}
+          <a href="{{ url_for('profile.edit_profile') }}" class="btn btn-secondary btn-sm">Edit Profile</a>
+        {% endif %}
+        <button class="btn btn-secondary btn-sm" onclick="toggleAudio()">Mute/Unmute</button>
+      </div>
+    </div>
+
+    <script>
+      function toggleAudio() {
+        const audio = document.getElementById('profile-audio');
+        audio.muted = !audio.muted;
+      }
+    </script>
   </div>
+</div>
 
-  <!-- Drawing Canvas -->
-  <div class="canvas-wrap">
-    <canvas id="c"></canvas>
+    <audio id="profile-audio" autoplay loop muted>
+      <source src="{{ profile_user['profile_audio'] }}" type="audio/mpeg">
+    </audio>
+
+    <script>
+      const audio = document.getElementById('profile-audio');
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          audio.muted = false;
+          audio.play().catch(err => console.warn('Autoplay blocked:', err));
+        }, 500);
+      });
+    </script>
+
+
+    <h4>{{ profile_user['username'] }}'s Posts</h4>
+    {% if posts %}
+      {% for post in posts %}
+        <div class="card mb-2">
+          <div class="card-body">
+            <p>{{ post['text'] }}</p>
+            <small class="text-muted">{{ post['formatted_time'] }}</small>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No posts yet.</p>
+    {% endif %}
   </div>
-
-  <script>
-    window.G = { profileId: { profile_id, tojson } };
-  </script>
-  <script src="{{ url_for('static', filename='js/graffiti.js') }}"></script>
-</body>
-</html>
+</div>
+{% endblock %}
