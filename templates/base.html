@@ -30,9 +30,14 @@
             </ul>
             <ul class="navbar-nav pull-right">
               {% if user %}
-              <form method="post" action="/logout">
-                <button type="submit" class="form-control btn btn-secondary" name="logout">Logout</button>
-              </form>
+              <li class="nav-item">
+                <a href="{{ url_for('profile.profile', username=user['username']) }}" class="btn btn-secondary mr-2">My Profile</a>
+              </li>
+              <li class="nav-item">
+                <form method="post" action="/logout" class="d-inline">
+                  <button type="submit" class="btn btn-secondary">Logout</button>
+                </form>
+              </li>
               {% endif %}
             </ul>
           </div>
