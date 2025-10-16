@@ -1,6 +1,5 @@
 flask
 tinydb
 timeago
-openai
 Flask==3.0.3 # For graffiti
 openai==1.51.2 # For openAI
