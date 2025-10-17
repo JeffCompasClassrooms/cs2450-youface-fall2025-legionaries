@@ -101,6 +101,7 @@ Posts
 
 | Key | Type | Description |
 | --- | ------ | --- |
+| nsfw | bool | Is the post NSFW? |
 | id | int | The post's unique identifier. |
 | user | str | The username of the post creator. |
 | text | str | The text of the post. |

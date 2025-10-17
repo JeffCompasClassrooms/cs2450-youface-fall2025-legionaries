@@ -83,10 +83,11 @@ def index():
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     # get the info for the user's feed
+    nsfw_toggle = False # placeholder for settings
     friends = users.get_user_friends(db, user)
     all_posts = []
     for friend in friends + [user]:
-        all_posts += posts.get_posts(db, friend)
+        all_posts += posts.get_posts(db, friend, nsfw=nsfw_toggle)
     # sort posts
     sorted_posts = sorted(all_posts, key=lambda post: post['time'], reverse=True)
 
