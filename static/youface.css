@@ -10,3 +10,18 @@
         }
     }
 }
+
+.navbar.bg-primary {
+    background-color: #4c2f8d !important;
+}
+
+.navbar-brand img {
+    height: 40px;
+    margin-right: 0.5rem;
+}
+
+.btn{
+    background-color: #4c2f8d;
+    border-color: #4c2f8d;
+    color: white;
+}

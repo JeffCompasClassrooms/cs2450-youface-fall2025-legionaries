@@ -39,8 +39,12 @@ def post():
     if not post_text and not image_path:
         flask.flash('Please enter something to post.', 'warning')
         return flask.redirect(flask.url_for('login.index'))
+    
+    if 'nsfw_toggle' in flask.request.form:
+        nsfw_flag = True
+    else:
+        nsfw_flag = False
 
-
-    posts.add_post(db, user, post_text, image_path)
+    posts.add_post(db, user, post_text, nsfw_flag, image_path)
 
     return flask.redirect(flask.url_for('login.index'))

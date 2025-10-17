@@ -41,7 +41,9 @@ def login():
 
     submit = flask.request.form.get('type')
     if submit == 'Create':
-        if users.new_user(db, username, password) is None:
+        if username == '' and password == '':
+            flask.flash('Input username and password for an account!', 'danger') # when nothing is inputed
+        elif users.new_user(db, username, password) is None:
             resp.set_cookie('username', '', expires=0)
             resp.set_cookie('password', '', expires=0)
             flask.flash('Username {} already taken!'.format(username), 'danger')
