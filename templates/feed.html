@@ -11,10 +11,22 @@
     <div class="card bg-light mb-3">
       <div class="card-body">
         <h3 class="card-title">New Post</h3>
-        <form method="post" action="/post">
+        <form method="post" action="/post" enctype="multipart/form-data">
           <div class="form-group">
             <textarea class="form-control" name="post" rows="3" placeholder="What's on your mind?"></textarea>
           </div>
+          <div class="form-group">
+            <label for="fileInput" class="btn btn-info">Post Media</label>
+            <input type="file" name="image" id="fileInput" accept="image/*,video/*" style="display: none;">
+            <span id="fileName" class="ml-2 text-muted"></span>
+          </div>
+          <script>
+            document.getElementById('fileInput').addEventListener('change', function(e) {
+              var fileName = e.target.files[0] ? e.target.files[0].name : '';
+              document.getElementById('fileName').textContent = fileName;
+            });
+          </script>
+          
           <button type="submit" class="btn btn-primary" name="action" value="manual">Post</button>
           <button type="submit" class="btn btn-secondary ml-2" name="action" value="ai">AI Post</button>
           <input type="checkbox" id="nsfw_toggle" name="nsfw_toggle" ></input>
@@ -30,6 +42,16 @@
         <h4 class="card-title">{{ post.user }}</h4>
         <h6 class="card-subtitle mb-2 text-muted">{{ post.time|convert_time }}</h6>
         <p class="card-text">{{ post.text }}</p>
+		{% if post.image_path %}
+		  {% if post.image_path.endswith(('.mp4', '.mov', '.avi', '.webm')) %}
+		  <video controls class="img-fluid mt-2">
+		    <source src="/{{ post.image_path }}" type="video/mp4">
+		    Your browser does not support the video tag.
+		  </video>
+		  {% else %}
+		  <img src="/{{ post.image_path }}" class="img-fluid mt-2" alt="Post media">
+		  {% endif %}
+		{% endif %}
       </div>
     </div>
     {% endfor %}
