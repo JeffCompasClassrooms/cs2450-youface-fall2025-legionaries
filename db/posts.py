@@ -2,9 +2,9 @@ import time
 import tinydb
 from datetime import datetime, timezone
 
-def add_post(db, user, text, nsfw_flag=False):
+def add_post(db, user, text, nsfw_flag=False, image_path=None):
     posts = db.table('posts')
-    posts.insert({'user': user['username'], 'text': text, 'time': time.time(), 'nsfw' : nsfw_flag})
+    posts.insert({'user': user['username'], 'text': text, 'time': time.time(), 'nsfw' : nsfw_flag, 'image_path': image_path})
 
 def get_posts(db, user):
     posts = db.table('posts')
