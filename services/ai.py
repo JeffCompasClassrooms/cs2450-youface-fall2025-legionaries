@@ -24,12 +24,24 @@ def generate_post(prompt: str) -> str:
         return "AI post generation is unavailable. Please configure OPENAI_API_KEY."
 
     try:
-        response = client.responses.create(
+        if hasattr(client, "responses"):
+            response = client.responses.create(
+                model="gpt-4o-mini",
+                input=prompt,
+                max_output_tokens=300,
+            )
+            # responses API returns a richer content tree; prefer the plain text helper when available
+            text = getattr(response, "output_text", None)
+            if text:
+                return text.strip()
+            return response.output[0].content[0].text.strip()
+
+        chat_response = client.chat.completions.create(
             model="gpt-4o-mini",
-            input=prompt,
-            max_output_tokens=300,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=300,
         )
-        return response.output[0].content[0].text.strip()
+        return (chat_response.choices[0].message.content or "").strip()
     except Exception:
         logger.exception("generate_post failed")
         return "Sorry, couldn’t generate that right now."

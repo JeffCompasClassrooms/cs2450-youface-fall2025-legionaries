@@ -5,6 +5,9 @@ import time
 import flask
 import timeago
 import tinydb
+from dotenv import load_dotenv
+
+load_dotenv()  # load .env before importing handlers/services
 
 # handlers
 from handlers import friends, login, posts, profile
