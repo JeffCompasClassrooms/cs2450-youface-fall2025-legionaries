@@ -46,17 +46,11 @@ def delete_account(username, password):
     )
 
 def dashboard_to_login():
-    print(driver.current_url)
-    print("on step 1 of return login")
     logout_button = None
     logout_button = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, "form[action='/logout'] button[type='submit']"))
     )
-    print(logout_button)
-    print("on step 2 of return login")
     logout_button.click()
-    print("on step 3 of return login")
-    print(driver.current_url)
     if "loginscreen" in driver.current_url or "login" in driver.current_url:
         print("[INFO] - Returned to login screen after logout.")
 
@@ -83,6 +77,15 @@ try:
         tests_passed += 1
     else:
         print("[FAILED] - Create Account button not found")
+        
+    # Test: Verify that the delete account button exists
+    test_count += 1
+    delete_account_button = driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Delete']")
+    if delete_account_button:
+        print("[PASSED] - Delete Account button exists.")
+        tests_passed += 1
+    else:
+        print("[FAILED] - Delete Account button not found")
     
     # Test: Verify that the username and password input fields exist
     test_count += 1
@@ -179,11 +182,11 @@ try:
         print("[FAILED] - User cannot create a new account.")
         
     # Return to login screen
-    dashboard_to_login()
+    # dashboard_to_login()
         
     # Delete the newly created account to clean up
-    delete_account(new_username, new_password)
-    print("[INFO] - Deleted the newly created account to clean up.")
+    # delete_account(new_username, new_password)
+    # print("[INFO] - Deleted the newly created account to clean up.")
         
     # Summary of test results
     print(f"--= Ending Tests =--\nResults: {tests_passed} tests passed out of {test_count} total tests.")
