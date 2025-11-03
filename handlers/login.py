@@ -14,7 +14,7 @@ def loginscreen():
     username = flask.request.cookies.get('username')
     password = flask.request.cookies.get('password')
 
-    if username is not None and password is not None:
+    if username and password:
         if users.get_user(db, username, password):
             # If they are logged in, redirect them to the feed page
             flask.flash('You are already logged in.', 'warning')
@@ -44,15 +44,16 @@ def login():
         if username == '' and password == '':
             flask.flash('Input username and password for an account!', 'danger') # when nothing is inputed
         elif users.new_user(db, username, password) is None:
-            resp.set_cookie('username', '', expires=0)
-            resp.set_cookie('password', '', expires=0)
+            failure_resp = flask.make_response(flask.redirect(flask.url_for('login.loginscreen')))
+            failure_resp.delete_cookie('username')
+            failure_resp.delete_cookie('password')
             flask.flash('Username {} already taken!'.format(username), 'danger')
-            return flask.redirect(flask.url_for('login.loginscreen'))
+            return failure_resp
         flask.flash('User {} created successfully!'.format(username), 'success')
     elif submit == 'Delete':
         if users.delete_user(db, username, password):
-            resp.set_cookie('username', '', expires=0)
-            resp.set_cookie('password', '', expires=0)
+            resp.delete_cookie('username')
+            resp.delete_cookie('password')
             flask.flash('User {} deleted successfully!'.format(username), 'success')
 
     return resp
@@ -63,8 +64,8 @@ def logout():
     db = helpers.load_db()
 
     resp = flask.make_response(flask.redirect(flask.url_for('login.loginscreen')))
-    resp.set_cookie('username', '', expires=0)
-    resp.set_cookie('password', '', expires=0)
+    resp.delete_cookie('username')
+    resp.delete_cookie('password')
     return resp
 
 @blueprint.route('/')
