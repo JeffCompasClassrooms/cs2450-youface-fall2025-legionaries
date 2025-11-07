@@ -1,4 +1,4 @@
-name: Run Selenium Tests
+name: Run Custom Selenium Tests
 
 on:
   push:
@@ -41,4 +41,4 @@ jobs:
         env:
           SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
         run: |
-          python test_posting.py
+          python tests/test_posting.py
