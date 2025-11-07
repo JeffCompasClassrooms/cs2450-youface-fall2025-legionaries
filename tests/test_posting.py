@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import time
 
 
@@ -12,7 +13,10 @@ options.add_argument("--disable-dev-shm-usage")
 options.add_argument("--window-size=1200,800")
 
 # Don't specify chromedriver path!
-driver = webdriver.Chrome(options=options)
+driver = webdriver.Remote(
+    command_executor="http://localhost:4444/wd/hub",
+    desired_capabilities=DesiredCapabilities.CHROME,
+)
 try:
     web_url = "http://localhost:3000/"
     driver.get(web_url)
