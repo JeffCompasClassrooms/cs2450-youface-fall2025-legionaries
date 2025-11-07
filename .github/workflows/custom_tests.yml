@@ -1,4 +1,4 @@
-name: Run Custom Selenium Tests
+name: Run Selenium Tests
 
 on:
   push:
@@ -35,7 +35,15 @@ jobs:
       - name: Start Flask app in background
         run: |
           nohup python youface.py > flask.log 2>&1 &
-          sleep 5
+          echo "Waiting for Flask (port 5005) to start..."
+          for i in {1..15}; do
+            if curl -s http://127.0.0.1:5005 >/dev/null; then
+              echo "Flask is up!"
+              break
+            fi
+            echo "Still waiting..."
+            sleep 2
+          done
 
       - name: Run Selenium tests
         env:
