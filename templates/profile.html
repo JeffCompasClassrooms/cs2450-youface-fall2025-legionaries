@@ -111,6 +111,43 @@
       });
     </script>
 
+    <!-- ===== Graffiti toolbar & canvas ===== -->
+    <div class="graffiti-toolbar card mb-3">
+      <div class="card-body">
+        <div class="d-flex align-items-center flex-wrap gap-2">
+          <label class="mb-0 mr-2">
+            <input id="toggle" type="checkbox"> <strong>🎨 Graffiti Mode</strong>
+          </label>
+
+          <button id="pen"    type="button" class="btn btn-sm btn-secondary mr-1">Pen</button>
+          <button id="eraser" type="button" class="btn btn-sm btn-outline-secondary mr-3">Eraser</button>
+
+          <label class="mb-0 mr-2">Color <input id="color" type="color" value="#000000" class="ml-1"></label>
+          <label class="mb-0 mr-3">Size <input id="size" type="number" min="1" max="24" value="4" class="ml-1" style="width:70px"></label>
+
+          <button id="push"  type="button" class="btn btn-sm btn-success mr-2">⬆ Push to Profile</button>
+          <button id="clear" type="button" class="btn btn-sm btn-outline-danger">🧹 Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="graffiti-canvas-wrap mb-4">
+      <canvas id="c"></canvas>
+    </div>
+    <!-- ===== /Graffiti ===== -->
+
+    <!-- expose profile id for JS -->
+    <script>
+      window.G = window.G || {};
+      window.G.profileId = "{{ profile_user['username'] }}";
+    </script>
+    
+    
+
+    <!-- load CSS/JS for graffiti -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/graffiti.css') }}">
+    <script defer src="{{ url_for('static', filename='js/graffiti.js') }}"></script>
+
     <h4>{{ profile_user['username'] }}'s Posts</h4>
     {% if posts %}
       {% for post in posts %}

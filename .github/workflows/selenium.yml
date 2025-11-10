@@ -1,43 +1,58 @@
-name: Run Selenium Tests
+name: Run Selenium UI Tests
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
+
 jobs:
-  selenium:
+  selenium-tests:
     runs-on: ubuntu-latest
 
-    services:
-      selenium:
-        image: selenium/standalone-chrome:latest
-        ports:
-          - 4444:4444
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install selenium
+      # Install Google Chrome for headless testing
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
 
-      - name: Start Flask app in background
+      # Install Python deps (Selenium + your app deps)
+      - name: Install Dependencies
         run: |
-          nohup python youface.py > flask.log 2>&1 &
-          sleep 5
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install selenium webdriver-manager flask
 
-      - name: Run Selenium tests
-        env:
-          SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
+      # Start your Flask app (youface.py)
+      - name: Start YouFace Server
         run: |
-          python selenium_example.py
+          nohup python3 youface.py > server.log 2>&1 &
+          # Give it time to fully start
+          sleep 8
+          echo "=== Server Log ==="
+          tail -n 50 server.log
+
+      # Run ONLY the Selenium UI test files
+      - name: Run Selenium UI Tests
+        run: |
+          echo "=== Beginning Selenium Tests ==="
+          for test in tests/*_ui.py; do
+            echo "Running $test"
+            python3 "$test"
+          done
+          echo "=== Ending Selenium Tests ==="
+
+      # Upload server log (optional but helpful for debugging)
+      - name: Upload Server Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: youface-server-log
+          path: server.log
