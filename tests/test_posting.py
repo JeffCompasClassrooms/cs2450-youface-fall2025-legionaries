@@ -15,14 +15,9 @@ options.add_argument("--window-size=1200,800")
 # Don't specify chromedriver path!
 driver = webdriver.Chrome(options=options)
 
-driver = webdriver.Remote(
-    command_executor="http://localhost:4444/wd/hub",
-    options=options,
-    desired_capabilities=DesiredCapabilities.CHROME,
-)
 
 try:
-    web_url = "http://localhost:3000/"
+    web_url = "http://localhost:5005/"
     driver.get(web_url)
     time.sleep(2)
     print("Getting into Home Page...")
