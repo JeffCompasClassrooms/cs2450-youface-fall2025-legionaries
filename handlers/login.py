@@ -1,5 +1,5 @@
 import flask
-
+from hashlib import sha256
 from handlers import copy
 from db import posts, users, helpers
 
@@ -15,6 +15,7 @@ def loginscreen():
     password = flask.request.cookies.get('password')
 
     if username and password:
+        password = str(sha256(password.encode()).digest()) # hash before checking
         if users.get_user(db, username, password):
             # If they are logged in, redirect them to the feed page
             flask.flash('You are already logged in.', 'warning')
@@ -34,6 +35,7 @@ def login():
 
     username = flask.request.form.get('username')
     password = flask.request.form.get('password')
+    password = str(sha256(password.encode()).digest()) # hash password for security
 
     resp = flask.make_response(flask.redirect(flask.url_for('login.index')))
     resp.set_cookie('username', username)
