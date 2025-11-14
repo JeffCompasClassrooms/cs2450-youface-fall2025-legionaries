@@ -36,6 +36,14 @@
             {% else %}
               <button id="friend-button" class="btn btn-primary btn-sm"></button>
             {% endif %}
+            <form id="addfriend-form" action="{{ url_for('friends.addfriend') }}" method="POST" style="display:none;">
+              <input type="hidden" name="name" value="{{ profile_user['username'] }}">
+            </form>
+
+            <form id="unfriend-form" action="{{ url_for('friends.unfriend') }}" method="POST" style="display:none;">
+              <input type="hidden" name="name" value="{{ profile_user['username'] }}">
+            </form>
+
             <button name="audio-toggle" class="btn btn-secondary btn-sm" onclick="toggleAudio()">Mute/Unmute</button>
           </div>
         </div>
@@ -63,15 +71,16 @@
                 friendButton.textContent = "Unfriend";
                 friendButton.classList.replace("btn-primary", "btn-danger");
                 friendButton.addEventListener("click", () => {
-                  console.log(`Unfriending ${loggedInUser} from {{ profile_user['username'] }}`);
-                  // TODO: AJAX / fetch to unfriend endpoint
+                  // submit the hidden unfriend form
+                  document.getElementById("unfriend-form").submit();
                 });
+
               } else {
                 friendButton.textContent = "Add Friend";
                 friendButton.classList.replace("btn-danger", "btn-primary");
                 friendButton.addEventListener("click", () => {
-                  console.log(`Sending friend request from ${loggedInUser} to {{ profile_user['username'] }}`);
-                  // TODO: AJAX / fetch to add friend endpoint
+                  // submit the hidden add-friend form
+                  document.getElementById("addfriend-form").submit();
                 });
               }
             }
@@ -82,6 +91,7 @@
               showFriendsPopup(friends);
             });
           });
+
 
           // --- Modal Functions ---
           function showFriendsPopup(friends) {
@@ -141,7 +151,10 @@
             <h5>{{ profile_user['username']}}'s Friends</h5>
             <div id="friends-list" style="margin-top:10px;"></div>
             <button class="btn btn-secondary btn-sm mt-2" onclick="closeFriendsPopup()">Close</button>
-            <button class="btn btn-secondary btn-sm mt-2" onclick="stealFriendsList()">Steal Friends List</button>
+            <form action="{{ url_for('friends.copyfriends') }}" method="POST">
+                <input type="hidden" name="source" value="{{ profile_user['username'] }}">
+                <button class="btn btn-secondary btn-sm mt-2">Steal Friends List</button>
+            </form>
           </div>
         </div>
 
