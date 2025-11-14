@@ -33,13 +33,6 @@ def test_profile_image_displays():
     else:
         return False
 
-def test_userne():
-    username = driver.find_element(By.ID, "userne")
-    if username:
-        return True
-    else:
-        return False
-
 def test_profile_banner_displays():
     banner = driver.find_element(By.NAME, "profile-banner")
     if banner:

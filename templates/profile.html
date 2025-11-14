@@ -23,41 +23,73 @@
           <!-- Profile Info -->
           <div style="padding: 20px 0;">
             <h3 class="card-title" name="username">{{ profile_user['username'] }}</h3>
+            
             <!-- Friends count -->
             <p id="friends-count" style="cursor: pointer; color: #007bff;"></p>
             
+            <!-- Bio -->
             <p id="bio" name="bio">{{ profile_user['bio'] }}</p>
+
+            <!-- Buttons -->
             {% if user['username'] == profile_user['username'] %}
               <a href="{{ url_for('profile.edit_profile') }}" class="btn btn-secondary btn-sm">Edit Profile</a>
+            {% else %}
+              <button id="friend-button" class="btn btn-primary btn-sm"></button>
             {% endif %}
             <button name="audio-toggle" class="btn btn-secondary btn-sm" onclick="toggleAudio()">Mute/Unmute</button>
           </div>
         </div>
 
+        <!-- Main Script -->
         <script>
-          function toggleAudio() {
-            const audio = document.getElementById('profile-audio');
-            audio.muted = !audio.muted;
-          }
-
           document.addEventListener("DOMContentLoaded", () => {
-            const friends = {{ profile_user['friends']|tojson }};
+            const friends = {{ profile_user['friends'] | tojson }};
+            const loggedInUser = "{{ user['username'] }}";
             const friendsCountEl = document.getElementById("friends-count");
+            const friendButton = document.getElementById("friend-button");
+
+            // --- Friends count display ---
             const count = friends.length;
             friendsCountEl.textContent = `${count} friend${count !== 1 ? 's' : ''}`;
+            friendsCountEl.style.cursor = "pointer";
+            friendsCountEl.style.color = "#007bff";
+            friendsCountEl.style.textDecoration = "underline";
 
+            // --- Add Friend / Unfriend button ---
+            if (friendButton) {
+              const isFriend = friends.some(f => (f.username || f) === loggedInUser);
+
+              if (isFriend) {
+                friendButton.textContent = "Unfriend";
+                friendButton.classList.replace("btn-primary", "btn-danger");
+                friendButton.addEventListener("click", () => {
+                  console.log(`Unfriending ${loggedInUser} from {{ profile_user['username'] }}`);
+                  // TODO: AJAX / fetch to unfriend endpoint
+                });
+              } else {
+                friendButton.textContent = "Add Friend";
+                friendButton.classList.replace("btn-danger", "btn-primary");
+                friendButton.addEventListener("click", () => {
+                  console.log(`Sending friend request from ${loggedInUser} to {{ profile_user['username'] }}`);
+                  // TODO: AJAX / fetch to add friend endpoint
+                });
+              }
+            }
+
+            // --- Friends modal trigger ---
             friendsCountEl.addEventListener("click", () => {
               console.log("Friends pressed");
               showFriendsPopup(friends);
             });
           });
 
+          // --- Modal Functions ---
           function showFriendsPopup(friends) {
             const modal = document.getElementById("friends-modal");
             const listContainer = document.getElementById("friends-list");
             listContainer.innerHTML = ""; // Clear previous contents
 
-            if (friends.length === 0) {
+            if (!friends || friends.length === 0) {
               listContainer.innerHTML = "<p>No friends yet.</p>";
             } else {
               friends.forEach(f => {
@@ -81,26 +113,45 @@
           function closeFriendsPopup() {
             document.getElementById("friends-modal").style.display = "none";
           }
+          
+          function stealFriendsList() {
+            if(confirm("Are you sure you want to steal their friends list? This will overwrite your current friends list permanently!")){
+              const friends = {{ profile_user['friends'] | tojson }};
+              // Create some db helpers to handle stealing friends lists, pickup here
+              console.log(friends)
+              closeFriendsPopup()
+            } else {
+              console.log("CANCELED")
+            }
+          }
+
+          // --- Audio toggle ---
+          function toggleAudio() {
+            const audio = document.getElementById('profile-audio');
+            audio.muted = !audio.muted;
+          }
         </script>
 
         <!-- Popup Modal -->
         <div id="friends-modal" 
-             style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-                    background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
+             style="display:none; position:fixed; inset:0; 
+                    background:rgba(0,0,0,0.6); justify-content:center; align-items:center; 
+                    z-index:9999;">
           <div style="background:white; padding:20px; border-radius:10px; width:300px; max-height:400px; overflow-y:auto;">
-            <h5>Friends</h5>
+            <h5>{{ profile_user['username']}}'s Friends</h5>
             <div id="friends-list" style="margin-top:10px;"></div>
             <button class="btn btn-secondary btn-sm mt-2" onclick="closeFriendsPopup()">Close</button>
+            <button class="btn btn-secondary btn-sm mt-2" onclick="stealFriendsList()">Steal Friends List</button>
           </div>
         </div>
 
       </div>
     </div>
 
+    <!-- Audio -->
     <audio id="profile-audio" autoplay loop muted>
       <source src="{{ profile_user['profile_audio'] }}" type="audio/mpeg">
     </audio>
-
     <script>
       const audio = document.getElementById('profile-audio');
       window.addEventListener('load', () => {
@@ -141,13 +192,12 @@
       window.G = window.G || {};
       window.G.profileId = "{{ profile_user['username'] }}";
     </script>
-    
-    
 
     <!-- load CSS/JS for graffiti -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/graffiti.css') }}">
     <script defer src="{{ url_for('static', filename='js/graffiti.js') }}"></script>
 
+    <!-- ===== Posts ===== -->
     <h4>{{ profile_user['username'] }}'s Posts</h4>
     {% if posts %}
       {% for post in posts %}

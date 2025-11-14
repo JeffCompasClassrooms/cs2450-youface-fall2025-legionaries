@@ -76,7 +76,7 @@
         {% if friends %}
           <ul>
             {% for friend in friends %}
-              <li><a href="/friend/{{ friend.username }}">{{ friend.username }}</a></li>
+              <li><a href="/profile/{{ friend.username }}">{{ friend.username }}</a></li>
             {% endfor %}
           </ul>
         {% else %}
