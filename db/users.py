@@ -107,7 +107,22 @@ def update_user_audio(db, user, audio_path):
     if not os.path.exists(path):
         return 'Audio file not found.', 'danger'
 
-    # Update DB with new audio path
     users.update({'profile_audio': audio_path}, (User.username == user['username']) & (User.password == user['password']))
     user['profile_audio'] = audio_path
     return 'Profile audio updated successfully.', 'success'
+
+def overwrite_user_friends(db, user, source_user):
+    users = db.table('users')
+    User = tinydb.Query()
+
+    new_list = list(source_user.get('friends', []))
+
+    user['friends'] = new_list
+
+    users.upsert(
+        user,
+        (User.username == user['username']) &
+        (User.password == user['password'])
+    )
+
+    return f"Copied {source_user['username']}'s friends list successfully!", "success"

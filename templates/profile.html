@@ -7,42 +7,164 @@
       <div class="card-body position-relative p-0">
         <!-- Banner Image -->
         <div style="height: 200px; overflow: hidden;">
-          <img src="{{ profile_user['banner_picture'] }}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;">
+          <img id="banner-image" src="{{ profile_user['banner_picture'] }}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
-
+        
         <!-- Profile Picture (overlapping banner) -->
         <div style="position: relative; margin-top: -60px; padding: 0 20px;">
           <div style="width: 200px; height: 200px; border-radius: 50%; background-color: white; display: inline-block;">
             <img
-              src="{{ profile_user['profile_picture'] }}"
+              id="profile-image" 
+              src="{{ profile_user['profile_picture'] }}" 
               alt="Embedded Profile Picture"
               style="width: 200px; height: 200px; border-radius: 50%; border: 3px solid white; object-fit: cover;">
           </div>
-
+          
           <!-- Profile Info -->
           <div style="padding: 20px 0;">
-            <h3 class="card-title">{{ profile_user['username'] }}</h3>
-            <p>{{ profile_user['bio'] }}</p>
+            <h3 class="card-title" name="username">{{ profile_user['username'] }}</h3>
+            
+            <!-- Friends count -->
+            <p id="friends-count" style="cursor: pointer; color: #007bff;"></p>
+            
+            <!-- Bio -->
+            <p id="bio" name="bio">{{ profile_user['bio'] }}</p>
+
+            <!-- Buttons -->
             {% if user['username'] == profile_user['username'] %}
               <a href="{{ url_for('profile.edit_profile') }}" class="btn btn-secondary btn-sm">Edit Profile</a>
+            {% else %}
+              <button id="friend-button" class="btn btn-primary btn-sm"></button>
             {% endif %}
-            <button class="btn btn-secondary btn-sm" onclick="toggleAudio()">Mute/Unmute</button>
+            <form id="addfriend-form" action="{{ url_for('friends.addfriend') }}" method="POST" style="display:none;">
+              <input type="hidden" name="name" value="{{ profile_user['username'] }}">
+            </form>
+
+            <form id="unfriend-form" action="{{ url_for('friends.unfriend') }}" method="POST" style="display:none;">
+              <input type="hidden" name="name" value="{{ profile_user['username'] }}">
+            </form>
+
+            <button name="audio-toggle" class="btn btn-secondary btn-sm" onclick="toggleAudio()">Mute/Unmute</button>
           </div>
         </div>
 
+        <!-- Main Script -->
         <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            const friends = {{ profile_user['friends'] | tojson }};
+            const loggedInUser = "{{ user['username'] }}";
+            const friendsCountEl = document.getElementById("friends-count");
+            const friendButton = document.getElementById("friend-button");
+
+            // --- Friends count display ---
+            const count = friends.length;
+            friendsCountEl.textContent = `${count} friend${count !== 1 ? 's' : ''}`;
+            friendsCountEl.style.cursor = "pointer";
+            friendsCountEl.style.color = "#007bff";
+            friendsCountEl.style.textDecoration = "underline";
+
+            // --- Add Friend / Unfriend button ---
+            if (friendButton) {
+              const isFriend = friends.some(f => (f.username || f) === loggedInUser);
+
+              if (isFriend) {
+                friendButton.textContent = "Unfriend";
+                friendButton.classList.replace("btn-primary", "btn-danger");
+                friendButton.addEventListener("click", () => {
+                  // submit the hidden unfriend form
+                  document.getElementById("unfriend-form").submit();
+                });
+
+              } else {
+                friendButton.textContent = "Add Friend";
+                friendButton.classList.replace("btn-danger", "btn-primary");
+                friendButton.addEventListener("click", () => {
+                  // submit the hidden add-friend form
+                  document.getElementById("addfriend-form").submit();
+                });
+              }
+            }
+
+            // --- Friends modal trigger ---
+            friendsCountEl.addEventListener("click", () => {
+              console.log("Friends pressed");
+              showFriendsPopup(friends);
+            });
+          });
+
+
+          // --- Modal Functions ---
+          function showFriendsPopup(friends) {
+            const modal = document.getElementById("friends-modal");
+            const listContainer = document.getElementById("friends-list");
+            listContainer.innerHTML = ""; // Clear previous contents
+
+            if (!friends || friends.length === 0) {
+              listContainer.innerHTML = "<p>No friends yet.</p>";
+            } else {
+              friends.forEach(f => {
+                const username = f.username || f;
+                const link = document.createElement("a");
+                link.textContent = username;
+                link.href = `/profile/${username}`;
+                link.style.display = "block";
+                link.style.color = "#007bff";
+                link.style.textDecoration = "none";
+                link.style.padding = "5px 0";
+                link.addEventListener("mouseover", () => link.style.textDecoration = "underline");
+                link.addEventListener("mouseout", () => link.style.textDecoration = "none");
+                listContainer.appendChild(link);
+              });
+            }
+
+            modal.style.display = "flex";
+          }
+
+          function closeFriendsPopup() {
+            document.getElementById("friends-modal").style.display = "none";
+          }
+          
+          function stealFriendsList() {
+            if(confirm("Are you sure you want to steal their friends list? This will overwrite your current friends list permanently!")){
+              const friends = {{ profile_user['friends'] | tojson }};
+              // Create some db helpers to handle stealing friends lists, pickup here
+              console.log(friends)
+              closeFriendsPopup()
+            } else {
+              console.log("CANCELED")
+            }
+          }
+
+          // --- Audio toggle ---
           function toggleAudio() {
             const audio = document.getElementById('profile-audio');
             audio.muted = !audio.muted;
           }
         </script>
+
+        <!-- Popup Modal -->
+        <div id="friends-modal" 
+             style="display:none; position:fixed; inset:0; 
+                    background:rgba(0,0,0,0.6); justify-content:center; align-items:center; 
+                    z-index:9999;">
+          <div style="background:white; padding:20px; border-radius:10px; width:300px; max-height:400px; overflow-y:auto;">
+            <h5>{{ profile_user['username']}}'s Friends</h5>
+            <div id="friends-list" style="margin-top:10px;"></div>
+            <button class="btn btn-secondary btn-sm mt-2" onclick="closeFriendsPopup()">Close</button>
+            <form action="{{ url_for('friends.copyfriends') }}" method="POST">
+                <input type="hidden" name="source" value="{{ profile_user['username'] }}">
+                <button class="btn btn-secondary btn-sm mt-2">Steal Friends List</button>
+            </form>
+          </div>
+        </div>
+
       </div>
     </div>
 
+    <!-- Audio -->
     <audio id="profile-audio" autoplay loop muted>
       <source src="{{ profile_user['profile_audio'] }}" type="audio/mpeg">
     </audio>
-
     <script>
       const audio = document.getElementById('profile-audio');
       window.addEventListener('load', () => {
@@ -83,13 +205,12 @@
       window.G = window.G || {};
       window.G.profileId = "{{ profile_user['username'] }}";
     </script>
-    
-    
 
     <!-- load CSS/JS for graffiti -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/graffiti.css') }}">
     <script defer src="{{ url_for('static', filename='js/graffiti.js') }}"></script>
 
+    <!-- ===== Posts ===== -->
     <h4>{{ profile_user['username'] }}'s Posts</h4>
     {% if posts %}
       {% for post in posts %}
