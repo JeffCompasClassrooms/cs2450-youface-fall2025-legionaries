@@ -25,3 +25,24 @@
     border-color: #4c2f8d;
     color: white;
 }
+
+/* Preserve green/red for success and danger; keep primary purple */
+.btn-primary {
+    background-color: #4c2f8d;
+    border-color: #4c2f8d;
+    color: white;
+}
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #3f2674;
+    border-color: #3f2674;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
