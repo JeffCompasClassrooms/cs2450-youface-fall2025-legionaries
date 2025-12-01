@@ -1,0 +1,28 @@
+/* Toolbar styling */
+.graffiti-toolbar .btn {
+  margin-right: 8px;
+}
+
+/* ===== FULL PAGE CANVAS ===== */
+
+/* Allow interaction on the toolbar even when canvas is covering page */
+.graffiti-toolbar {
+  position: relative;
+  z-index: 10000;      /* ABOVE the canvas layer */
+  pointer-events: auto;
+}
+
+#c {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;   /* full window width */
+  height: 100vh;  /* full window height */
+  z-index: 9999;  /* above entire site */
+  pointer-events: none;  /* JS enables it */
+  display: block;
+}
+
+html, body {
+  height: 100%;
+}

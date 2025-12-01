@@ -1,0 +1,27 @@
+.jumbotron {
+    padding: 0.5em 0.6em;
+    h1 {
+        font-size: 2em;
+    }
+    p {
+        font-size: 1.2em;
+        .btn {
+            padding: 0.5em;
+        }
+    }
+}
+
+.navbar.bg-primary {
+    background-color: #4c2f8d !important;
+}
+
+.navbar-brand img {
+    height: 40px;
+    margin-right: 0.5rem;
+}
+
+.btn{
+    background-color: #4c2f8d;
+    border-color: #4c2f8d;
+    color: white;
+}
