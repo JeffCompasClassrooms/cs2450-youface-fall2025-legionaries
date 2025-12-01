@@ -44,3 +44,6 @@ def clear_graffiti(username):
 
     table.remove(Q.username == username)
     return flask.jsonify({"status": "cleared"})
+
+
+# Fully done with graffiti
