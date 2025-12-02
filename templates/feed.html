@@ -1,39 +1,40 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-md-center mb-4">
+<div class="row justify-content-md-center mb-4" style="margin-top: 30px;">
   <h1 class="">Welcome, {{username}}!</h1>
 </div>
 
 <div class="row justify-content-md-center">
 
   <div class="col col-lg-8">
-    <div class="card bg-light mb-3">
-      <div class="card-body">
-        <h3 class="card-title">New Post</h3>
-        <form method="post" action="/post" enctype="multipart/form-data">
-          <div class="form-group">
-            <textarea class="form-control" name="post" rows="3" placeholder="What's on your mind?"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="fileInput" class="btn btn-info">Post Media</label>
+      <div class="card bg-light mb-3">
+        <div class="card-body">
+          <h3 class="card-title">New Post</h3>
+          <form method="post" action="/post" enctype="multipart/form-data">
+            <div class="form-group">
+              <textarea class="form-control" name="post" rows="3" placeholder="What's on your mind?"></textarea>
+            </div>
             <input type="file" name="image" id="fileInput" accept="image/*,video/*" style="display: none;">
-            <span id="fileName" class="ml-2 text-muted"></span>
-          </div>
-          <script>
-            document.getElementById('fileInput').addEventListener('change', function(e) {
-              var fileName = e.target.files[0] ? e.target.files[0].name : '';
-              document.getElementById('fileName').textContent = fileName;
-            });
-          </script>
-          
-          <button type="submit" class="btn btn-primary" name="action" value="manual">Post</button>
-          <button type="submit" class="btn btn-secondary ml-2" name="action" value="ai">AI Post</button>
-          <input type="checkbox" id="nsfw_toggle" name="nsfw_toggle" ></input>
-          <label for="nsfw_toggle">Mark as NSFW</label>
-        </form>
+            <div class="d-flex flex-wrap align-items-center mb-2">
+              <button type="submit" class="btn btn-primary rounded-pill mb-2 mr-2" name="action" value="manual">Post</button>
+              <button type="submit" class="btn btn-secondary rounded-pill mb-2 mr-2" name="action" value="ai">AI Post</button>
+              <label for="fileInput" class="btn btn-info rounded-pill mb-2 mr-2">Attach Media</label>
+              <span id="fileName" class="text-muted mr-3 mb-2"></span>
+              <div class="form-check form-check-inline mb-2">
+                <input class="form-check-input" type="checkbox" id="nsfw_toggle" name="nsfw_toggle">
+                <label class="form-check-label" for="nsfw_toggle">Mark as NSFW</label>
+              </div>
+            </div>
+            <script>
+              document.getElementById('fileInput').addEventListener('change', function(e) {
+                var fileName = e.target.files[0] ? e.target.files[0].name : '';
+                document.getElementById('fileName').textContent = fileName;
+              });
+            </script>
+          </form>
+        </div>
       </div>
-    </div>
 
     <h2 class="">My Feed</h2>
     {% for post in posts %}
@@ -65,7 +66,7 @@
           <div class="form-group mb-1">
             <input type="text" class="form-control" name="name" placeholder="username" />
           </div>
-          <button type="submit" class="form-control btn btn-primary" name="addfriend">Submit</button>
+          <button type="submit" class="form-control btn btn-primary rounded-pill" name="addfriend">Submit</button>
         </form>
       </div>
     </div>
