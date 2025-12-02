@@ -33,6 +33,7 @@
                   <a class="dropdown-item" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1&ab_channel=RickAstley">Terms and Conditions</a>
                   {% if user %}
                   <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{{ url_for('login.index') }}">My Feed</a>
                   <a class="dropdown-item" href="{{ url_for('profile.profile', username=user['username']) }}">My Profile</a>
                   <form method="post" action="/logout" class="dropdown-item p-0 m-0">
                     <button type="submit" class="dropdown-item text-left w-100">Logout</button>
@@ -45,12 +46,14 @@
         </div>
       </nav>
 
+      {% if show_header %}
       <div class="jumbotron">
         <div class="container">
           <h1><a href="/">{{title}}</a></h1>
           <p class="lead">{{ subtitle|safe }}</p>
         </div>
       </div>
+      {% endif %}
 
       <div class="container">
         {% with messages = get_flashed_messages(with_categories=true) %}

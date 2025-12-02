@@ -21,7 +21,7 @@ def loginscreen():
             return flask.redirect(flask.url_for('login.index'))
 
     return flask.render_template('login.html', title=copy.title,
-            subtitle=copy.subtitle)
+            subtitle=copy.subtitle, show_header=True)
 
 @blueprint.route('/login', methods=['POST'])
 def login():
