@@ -52,22 +52,14 @@ def edit_profile():
 
     if flask.request.method == 'POST':
         new_bio = flask.request.form.get('bio', '').strip()
-        nsfw_toggle = bool(flask.request.form.get('nsfw'))
         picture_file = flask.request.files.get('picture')
         banner_file = flask.request.files.get('banner')
         audio_file = flask.request.files.get('audio')
-        print(nsfw_toggle)
-        
+
         # --- Update Bio ---
         if new_bio != user.get('bio', ''):
             users.update_user_bio(db, user, new_bio)
             flask.flash('Bio updated.', 'success')
-       
-       # --- Update NSFW preference --- 
-        print(user.get('nsfw_toggle', ''))
-        if nsfw_toggle != str(user.get('nsfw_toggle', '')):
-            users.update_user_nsfw_pref(db, user, nsfw_toggle)
-            flask.flash('NSFW preferences updated.', 'success')
 
         # Ensure directories exist
         upload_img_dir = "static/uploads"

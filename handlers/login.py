@@ -21,7 +21,7 @@ def loginscreen():
             return flask.redirect(flask.url_for('login.index'))
 
     return flask.render_template('login.html', title=copy.title,
-            subtitle=copy.subtitle)
+            subtitle=copy.subtitle, show_header=True)
 
 @blueprint.route('/login', methods=['POST'])
 def login():
@@ -90,10 +90,6 @@ def index():
         all_posts += posts.get_posts(db, friend)
     # sort posts
     sorted_posts = sorted(all_posts, key=lambda post: post['time'], reverse=True)
-    if user.get('nsfw_toggle', '') == False:
-        for post in sorted_posts:
-            if post['nsfw']:
-                sorted_posts.remove(post)
 
     return flask.render_template('feed.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
