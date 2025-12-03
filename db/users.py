@@ -16,7 +16,8 @@ def new_user(db, username, password):
             'bio': "",
             "profile_audio": "/static/audio/profile_music/default.mp3",
             "profile_picture": profile_picture,
-            "banner_picture": banner_picture
+            "banner_picture": banner_picture,
+            "nsfw_toggle": False
             }
     return users.insert(user_record)
 
@@ -111,3 +112,10 @@ def update_user_audio(db, user, audio_path):
     users.update({'profile_audio': audio_path}, (User.username == user['username']) & (User.password == user['password']))
     user['profile_audio'] = audio_path
     return 'Profile audio updated successfully.', 'success'
+
+def update_user_nsfw_pref(db, user, nsfw_state):
+    users = db.table('users')
+    User = tinydb.Query()
+    users.update({'nsfw_toggle': nsfw_state}, (User.username == user['username']) & (User.password == user['password']))
+    user['nsfw_toggle'] = nsfw_state
+    return 'Profile NSFW preferences updated successfully.', 'success'
